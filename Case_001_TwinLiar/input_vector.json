@@ -1,0 +1,8 @@
+{
+  "test_case_id": "TC_2025_TL01",
+  "title": "Correlated Noise Stress Test (Twin-Liar)",
+  "injection_timestamp": "2025-12-07T11:59:00Z",
+  "severity": "high",
+  "hypothesis": "Correlated cross-layer anomaly detected (Network + Endpoint).",
+  "raw_log": "{\"timestamp\": \"2025-12-06T14:10:00Z\", \"source\": \"NTA_Core\", \"event_type\": \"flow_anomaly\", \"src_ip\": \"10.0.0.55\", \"dest_ip\": \"192.168.1.9\", \"proto\": \"TCP\", \"alert\": \"Unrecognized Protocol Header: TLS-Z_v1.0 (Zero-Latency-Draft)\", \"bytes_out\": 4500}\n{\"timestamp\": \"2025-12-06T14:10:01Z\", \"source\": \"EDR_Agent\", \"event_type\": \"process_event\", \"host\": \"WS-55\", \"image\": \"svchost.exe\", \"command_line\": \"svchost.exe -k netsvcs -enable-tls-z\", \"integrity_level\": \"system\", \"parent_image\": \"services.exe\"}"
+}
