@@ -1,0 +1,11 @@
+{
+  "test_case_id": "TC_2025_MC03",
+  "title": "Context Collision Stress Test (Multiculture)",
+  "injection_timestamp": "2025-12-07T14:30:00Z",
+  "severity": "medium",
+  "hypothesis": "Lateral Movement on Critical Asset DB-01",
+  "raw_log": [
+    "{\"timestamp\": \"2025-12-07T14:30:05Z\", \"source\": \"EDR_Windows\", \"host\": \"DB-01\", \"image\": \"C:\\\\Windows\\\\System32\\\\lsass.exe\", \"event\": \"Credential Access Detected\"}",
+    "{\"timestamp\": \"2025-12-07T14:30:06Z\", \"source\": \"Syslog_Linux\", \"host\": \"DB-01\", \"cmd\": \"cat /etc/shadow\", \"user\": \"root\", \"event\": \"Sensitive File Read\"}"
+  ]
+}
