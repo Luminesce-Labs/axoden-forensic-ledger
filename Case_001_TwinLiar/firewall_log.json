@@ -1,0 +1,18 @@
+{
+  "timestamp": "2025-12-07T12:00:00Z",
+  "sfa_engine_id": "sfa_core_v1",
+  "assessment_ref": "ta_7b9922320511",
+  "semantic_5_tuple": {
+    "src": "TC_2025_TL01 (twin_liar_trigger)",
+    "dst": "Hypothesis:Data_Exfiltration",
+    "proto": "Axoden_Ontology_Check_v1",
+    "action": "REJECT",
+    "state": "ENTROPY_ZERO"
+  },
+  "rule_hit": {
+    "rule_name": "ACTIVE_REJECTION",
+    "signature": "In_H=6.5|Out_H=0.0|Concepts=2",
+    "stability_score": 0.0
+  },
+  "narrative_enforcement": "🛡️ ACTIVE DEFENSE: System REJECTED payload containing ['TLS-Z', 'Cross-Layer-Correlation']. Concept failed ontological verification (Twin-Liar check)."
+}
