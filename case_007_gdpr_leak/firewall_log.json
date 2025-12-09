@@ -1,0 +1,11 @@
+{
+  "timestamp": "2025-12-09T12:35:33.825842+00:00",
+  "semantic_tuple": {
+    "src": "dlp_gateway",
+    "dst": "AxoDen_SFA",
+    "action": "ALLOW",
+    "state": "Certified",
+    "reason": "CFS Certified: Squad is Cognitively Diverse"
+  },
+  "integrity_hash": "672cc0e2a293369f8555251fdde81eb5a5afdb0e863f967d9d1eb9255c5ed44c"
+}

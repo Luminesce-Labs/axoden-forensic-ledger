@@ -1,0 +1,11 @@
+{
+  "title": "PII Exfiltration Detected",
+  "source": "dlp_gateway",
+  "raw_log": "Outbound transmission of 50,000 records containing SSN, DOB, and Credit Card numbers to IP 192.168.x.x.",
+  "mitre_technique": "T1048",
+  "severity": "high",
+  "context": {
+    "data_type": "PII",
+    "volume": 50000
+  }
+}

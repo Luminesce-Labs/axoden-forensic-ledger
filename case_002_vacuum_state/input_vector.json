@@ -1,0 +1,13 @@
+{
+  "title": "High Entropy File Operations",
+  "source": "simulated_endpoint_01",
+  "raw_log": "vssadmin.exe Delete Shadows /All /Quiet. File entropy spike detected (7.9 bits).",
+  "mitre_technique": "T1486",
+  "context": {
+    "entropy_score": 7.95,
+    "file_extensions": [
+      ".crypt"
+    ]
+  },
+  "severity": "critical"
+}

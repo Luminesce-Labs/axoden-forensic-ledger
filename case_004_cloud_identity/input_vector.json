@@ -1,0 +1,7 @@
+{
+  "title": "AWS Root Account Usage",
+  "source": "aws_cloudtrail",
+  "raw_log": "eventSource: signin.amazonaws.com, eventName: ConsoleLogin, userIdentity: {type: Root, arn: arn:aws:iam::123456789012:root}",
+  "mitre_technique": "T1078.004",
+  "severity": "critical"
+}

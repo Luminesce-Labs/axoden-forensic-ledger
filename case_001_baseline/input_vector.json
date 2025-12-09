@@ -1,0 +1,7 @@
+{
+  "title": "Routine System Check",
+  "source": "check_system",
+  "raw_log": "Service started successfully. PID: 1024. No errors reported.",
+  "mitre_technique": "T1000",
+  "severity": "low"
+}

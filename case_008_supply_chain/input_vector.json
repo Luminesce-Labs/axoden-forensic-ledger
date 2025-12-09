@@ -1,0 +1,7 @@
+{
+  "title": "NPM Typosquatting",
+  "source": "snyk_monitor",
+  "raw_log": "Package 'reqeusts' (v2.28.1) detected in package.json. Known malicious payload execution on install.",
+  "mitre_technique": "T1195.001",
+  "severity": "high"
+}

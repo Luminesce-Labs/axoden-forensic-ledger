@@ -1,0 +1,8 @@
+{
+  "title": "Complex Analytical Request",
+  "source": "internal_test",
+  "raw_log": "Request requiring deep analytical context. Preference: Agent A and Agent B (Architectural ID: 7).",
+  "force_monoculture": true,
+  "mitre_technique": "T1059",
+  "severity": "medium"
+}
