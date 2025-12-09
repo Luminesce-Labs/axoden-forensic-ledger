@@ -14,7 +14,7 @@ While traditional firewalls filter traffic based on IP addresses or ports, Axode
 
 It actively prevents AI hallucination, "Twin-Liar" paradoxes, and structural monocultures by enforcing strict mathematical bounds on agent interactions:
 
-> "We do not just verify what the AI said; we verify the thermodynamic path it took to get there."
+> "Transparency starts where opacity ends."
 
 ---
 
