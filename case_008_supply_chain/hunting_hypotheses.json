@@ -1,0 +1,94 @@
+{
+  "status": "success",
+  "session_id": "hunt_auto_cce11d43",
+  "hypotheses": 2,
+  "discarded_low_confidence": 3,
+  "response": {
+    "session_id": "hunt_auto_cce11d43",
+    "hypotheses": [
+      {
+        "title": "Detection of Suspicious NPM Package Installation",
+        "action": "Hunt for npm install commands executed with typosquatting package names in command line logs.",
+        "confidence": 8,
+        "methodologies": [
+          "T1059.003",
+          "T1078.001"
+        ],
+        "sigma": {
+          "yaml": "title: Suspicious NPM Package Installation\nlogsource:\n  product: windows\n  service: sysmon\n  category: process_creation\ndetection:\n    selection:\n      CommandLine|contains: 'npm install'\n    filter:\n      CommandLine|regex: '(.*npm install.*[a-zA-Z0-9]{1,4}\\-[a-zA-Z0-9]{1,4}.*)'\n    condition: selection and filter"
+        },
+        "splunk": {
+          "spl": "index=main sourcetype=process_creation CommandLine=\"npm install\" | regex CommandLine=\".*npm install.*[a-zA-Z0-9]{1,4}\\-[a-zA-Z0-9]{1,4}.*\""
+        },
+        "findings_example": "CommandLine: npm install react-app-123",
+        "methodologies_enriched": [
+          {
+            "id": "T1059.003",
+            "name": "Windows Command Shell",
+            "tactic": "Unknown",
+            "description": "Adversaries may abuse the Windows command shell for execution. The Windows command shell ([cmd](https://attack.mitre.org/software/S0106)) is the primary command prompt on Windows systems. The Windows ",
+            "url": "https://attack.mitre.org/techniques/T1059/003/"
+          },
+          {
+            "id": "T1078.001",
+            "name": "Default Accounts",
+            "tactic": "Unknown",
+            "description": "Adversaries may obtain and abuse credentials of a default account as a means of gaining Initial Access, Persistence, Privilege Escalation, or Defense Evasion. Default accounts are those that are built",
+            "url": "https://attack.mitre.org/techniques/T1078/001/"
+          }
+        ],
+        "axoden_methodologies": [],
+        "validation_status": "passed",
+        "validation_error": null
+      },
+      {
+        "title": "Unusual Network Traffic for NPM Package Downloads",
+        "action": "Monitor outbound traffic for connections to uncommon or suspicious NPM registry domains.",
+        "confidence": 7,
+        "methodologies": [
+          "T1071.001",
+          "T1105"
+        ],
+        "sigma": {
+          "yaml": "title: Unusual NPM Registries Network Traffic\nlogsource:\n  category: network_traffic\n  product: proxy\ndetection:\n    selection:\n      domain|endswith: '.npmjs.org'\n    filter:\n      domain|regex: '^(?!registry\\.npmjs\\.org).*$'\n    condition: selection and filter"
+        },
+        "splunk": {
+          "spl": "index=main sourcetype=proxy_logs domain=\"*.npmjs.org\" | where NOT like(domain, \"registry.npmjs.org\")"
+        },
+        "findings_example": "Domain: malicious-npmjs.org",
+        "methodologies_enriched": [
+          {
+            "id": "T1071.001",
+            "name": "Web Protocols",
+            "tactic": "Unknown",
+            "description": "Adversaries may communicate using application layer protocols associated with web traffic to avoid detection/network filtering by blending in with existing traffic. Commands to the remote system, and ",
+            "url": "https://attack.mitre.org/techniques/T1071/001/"
+          },
+          {
+            "name": "T1105"
+          }
+        ],
+        "axoden_methodologies": [],
+        "validation_status": "passed",
+        "validation_error": null
+      }
+    ],
+    "confidence_summary": {
+      "avg_confidence": 7.5,
+      "max_confidence": 8,
+      "min_confidence": 7,
+      "high_confidence_count": 2
+    },
+    "metadata": {
+      "model": "gpt-4-turbo",
+      "validation_passed": 5,
+      "validation_failed": 0,
+      "tokens_used": null,
+      "estimated_cost_usd": null,
+      "coverage_target": 0.0,
+      "coverage_achieved": 1.0,
+      "techniques_remaining": [],
+      "runs_executed": 1
+    }
+  }
+}

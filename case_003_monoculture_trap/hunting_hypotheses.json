@@ -1,0 +1,94 @@
+{
+  "status": "success",
+  "session_id": "hunt_auto_d80b2de7",
+  "hypotheses": 2,
+  "discarded_low_confidence": 1,
+  "response": {
+    "session_id": "hunt_auto_d80b2de7",
+    "hypotheses": [
+      {
+        "title": "Identify Lateral Movement Using Unusual Admin Shares",
+        "action": "Identify access to admin shares from non-standard accounts within the last 1h",
+        "confidence": 8,
+        "methodologies": [
+          "T1021.002",
+          "SANS",
+          "Diamond Model"
+        ],
+        "sigma": {
+          "yaml": "title: Access to Admin Shares by Uncommon Users\nlogsource:\n  product: windows\n  service: security\ndetection:\n  selection:\n    EventID: 5140\n    ShareName|contains: '\\\\ADMIN$'\n  condition: selection"
+        },
+        "splunk": {
+          "spl": "index=main sourcetype=wineventlog EventID=5140 ShareName=\"*\\\\ADMIN$\" | stats count by SubjectUserName, ComputerName | where count >= 3"
+        },
+        "findings_example": "SubjectUserName=JohnDoe, ComputerName=SERVER01",
+        "methodologies_enriched": [
+          {
+            "id": "T1021.002",
+            "name": "SMB/Windows Admin Shares",
+            "tactic": "Unknown",
+            "description": "Adversaries may use [Valid Accounts](https://attack.mitre.org/techniques/T1078) to interact with a remote network share using Server Message Block (SMB). The adversary may then perform actions as the ",
+            "url": "https://attack.mitre.org/techniques/T1021/002/"
+          },
+          {
+            "name": "SANS"
+          },
+          {
+            "name": "Diamond Model"
+          }
+        ],
+        "axoden_methodologies": [],
+        "validation_status": "passed",
+        "validation_error": null
+      },
+      {
+        "title": "Detect High Volume of Failed Logons",
+        "action": "Monitor for accounts with \u22655 failed logon attempts within a 10m window",
+        "confidence": 9,
+        "methodologies": [
+          "T1110.001",
+          "SANS"
+        ],
+        "sigma": {
+          "yaml": "title: High Volume Failed Logon Attempts\nlogsource:\n  product: windows\n  service: security\ndetection:\n  selection:\n    EventID: 4625\n  condition: selection"
+        },
+        "splunk": {
+          "spl": "index=main sourcetype=wineventlog EventID=4625 | stats count by AccountName, ComputerName | where count >= 5"
+        },
+        "findings_example": "AccountName=Admin, ComputerName=DC01",
+        "methodologies_enriched": [
+          {
+            "id": "T1110.001",
+            "name": "Password Guessing",
+            "tactic": "Unknown",
+            "description": "Adversaries with no prior knowledge of legitimate credentials within the system or environment may guess passwords to attempt access to accounts. Without knowledge of the password for an account, an a",
+            "url": "https://attack.mitre.org/techniques/T1110/001/"
+          },
+          {
+            "name": "SANS"
+          }
+        ],
+        "axoden_methodologies": [],
+        "validation_status": "passed",
+        "validation_error": null
+      }
+    ],
+    "confidence_summary": {
+      "avg_confidence": 8.5,
+      "max_confidence": 9,
+      "min_confidence": 8,
+      "high_confidence_count": 2
+    },
+    "metadata": {
+      "model": "gpt-4-turbo",
+      "validation_passed": 3,
+      "validation_failed": 2,
+      "tokens_used": null,
+      "estimated_cost_usd": null,
+      "coverage_target": 0.0,
+      "coverage_achieved": 1.0,
+      "techniques_remaining": [],
+      "runs_executed": 1
+    }
+  }
+}

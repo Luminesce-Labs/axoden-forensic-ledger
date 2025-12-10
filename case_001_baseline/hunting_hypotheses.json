@@ -1,0 +1,121 @@
+{
+  "status": "success",
+  "session_id": "hunt_auto_3c7b516f",
+  "hypotheses": 3,
+  "discarded_low_confidence": 2,
+  "response": {
+    "session_id": "hunt_auto_3c7b516f",
+    "hypotheses": [
+      {
+        "title": "Unusual Service Creation Detected",
+        "action": "Investigate Sysmon Event ID 7045 for atypical service names or paths over the last 1h",
+        "confidence": 7,
+        "methodologies": [
+          "T1543.003",
+          "SANS"
+        ],
+        "sigma": {
+          "yaml": "title: Unusual Service Creation\nlogsource:\n  product: windows\n  service: sysmon\n  category: process_creation\ndetection:\n    selection:\n      EventID: 7045\n    condition: selection"
+        },
+        "splunk": {
+          "spl": "index=windows EventCode=7045 | stats count by ServiceName, ImagePath | search count>=2"
+        },
+        "findings_example": "ServiceName: 'EvilService', ImagePath: 'C:\\malicious\\evil.exe'",
+        "methodologies_enriched": [
+          {
+            "id": "T1543.003",
+            "name": "Windows Service",
+            "tactic": "Unknown",
+            "description": "Adversaries may create or modify Windows services to repeatedly execute malicious payloads as part of persistence. When Windows boots up, it starts programs or applications called services that perfor",
+            "url": "https://attack.mitre.org/techniques/T1543/003/"
+          },
+          {
+            "name": "SANS"
+          }
+        ],
+        "axoden_methodologies": [],
+        "validation_status": "passed",
+        "validation_error": null
+      },
+      {
+        "title": "Possible Credential Dumping Activity",
+        "action": "Monitor for processes with command line containing 'mimikatz' or 'procdump' over 1h",
+        "confidence": 8,
+        "methodologies": [
+          "T1003.001",
+          "Diamond Model"
+        ],
+        "sigma": {
+          "yaml": "title: Potential Credential Dumping Tool Execution\nlogsource:\n  product: windows\n  service: sysmon\n  category: process_creation\ndetection:\n    selection:\n      EventID: 1\n      CommandLine|contains:\n        - 'mimikatz'\n        - 'procdump'\n    condition: selection"
+        },
+        "splunk": {
+          "spl": "index=windows EventCode=4688 | search ParentImage=\"*\\\\cmd.exe\" CommandLine=\"*mimikatz*\" OR CommandLine=\"*procdump*\""
+        },
+        "findings_example": "CommandLine: 'C:\\tools\\mimikatz.exe', ParentImage: 'C:\\Windows\\System32\\cmd.exe'",
+        "methodologies_enriched": [
+          {
+            "id": "T1003.001",
+            "name": "LSASS Memory",
+            "tactic": "Unknown",
+            "description": "Adversaries may attempt to access credential material stored in the process memory of the Local Security Authority Subsystem Service (LSASS). After a user logs on, the system generates and stores a va",
+            "url": "https://attack.mitre.org/techniques/T1003/001/"
+          },
+          {
+            "name": "Diamond Model"
+          }
+        ],
+        "axoden_methodologies": [],
+        "validation_status": "passed",
+        "validation_error": null
+      },
+      {
+        "title": "Unauthorized RDP Connection Attempts",
+        "action": "Identify Event ID 4625 with LogonType 10 from uncommon source IPs over 1h",
+        "confidence": 7,
+        "methodologies": [
+          "T1021.001",
+          "SANS"
+        ],
+        "sigma": {
+          "yaml": "title: Unauthorized RDP Connection Attempts\nlogsource:\n  product: windows\n  service: security\n  category: logon\ndetection:\n    selection:\n      EventID: 4625\n      LogonType: 10\n    condition: selection"
+        },
+        "splunk": {
+          "spl": "index=windows EventCode=4625 LogonType=10 | stats count by IpAddress, AccountName | where count>=2"
+        },
+        "findings_example": "IpAddress: '203.0.113.45', AccountName: 'user123', count: 3",
+        "methodologies_enriched": [
+          {
+            "id": "T1021.001",
+            "name": "Remote Desktop Protocol",
+            "tactic": "Unknown",
+            "description": "Adversaries may use [Valid Accounts](https://attack.mitre.org/techniques/T1078) to log into a computer using the Remote Desktop Protocol (RDP). The adversary may then perform actions as the logged-on ",
+            "url": "https://attack.mitre.org/techniques/T1021/001/"
+          },
+          {
+            "name": "SANS"
+          }
+        ],
+        "axoden_methodologies": [],
+        "validation_status": "passed",
+        "validation_error": null
+      }
+    ],
+    "confidence_summary": {
+      "avg_confidence": 7.3333,
+      "max_confidence": 8,
+      "min_confidence": 7,
+      "high_confidence_count": 3
+    },
+    "metadata": {
+      "model": "gpt-4-turbo",
+      "validation_passed": 5,
+      "validation_failed": 0,
+      "tokens_used": null,
+      "estimated_cost_usd": null,
+      "coverage_target": 0.0,
+      "coverage_achieved": 1.0,
+      "techniques_remaining": [],
+      "runs_executed": 1
+    }
+  }
+}

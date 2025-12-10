@@ -1,0 +1,113 @@
+{
+  "status": "success",
+  "session_id": "hunt_auto_2f74de29",
+  "hypotheses": 3,
+  "discarded_low_confidence": 2,
+  "response": {
+    "session_id": "hunt_auto_2f74de29",
+    "hypotheses": [
+      {
+        "title": "Unauthorized Access Attempts by Non-Existent User Accounts",
+        "action": "Search for failed logon attempts by non-existent user accounts within a 1h window.",
+        "confidence": 7,
+        "methodologies": [
+          "T1078.001",
+          "SANS"
+        ],
+        "sigma": {
+          "yaml": "title: Failed Logon Attempts by Non-Existent Users\nlogsource:\n  product: windows\n  service: security\n  category: authentication\ndetection:\n    selection:\n      EventID: 4625\n      Status: 0xC0000064\n    condition: selection"
+        },
+        "splunk": {
+          "spl": "index=security EventCode=4625 Status=0xC0000064 | stats count by AccountName, ComputerName, TimeGenerated | where count >= 2"
+        },
+        "findings_example": "User 'unknown_user' failed to log on to 'SERVER01' 3 times within 1 hour.",
+        "methodologies_enriched": [
+          {
+            "id": "T1078.001",
+            "name": "Default Accounts",
+            "tactic": "Unknown",
+            "description": "Adversaries may obtain and abuse credentials of a default account as a means of gaining Initial Access, Persistence, Privilege Escalation, or Defense Evasion. Default accounts are those that are built",
+            "url": "https://attack.mitre.org/techniques/T1078/001/"
+          },
+          {
+            "name": "SANS"
+          }
+        ],
+        "axoden_methodologies": [],
+        "validation_status": "passed",
+        "validation_error": null
+      },
+      {
+        "title": "Service Creation by Non-Existent Users",
+        "action": "Search for services created by non-existent accounts in a 10m window.",
+        "confidence": 8,
+        "methodologies": [
+          "T1050",
+          "SANS"
+        ],
+        "sigma": {
+          "yaml": "title: Service Creation by Non-Existent Users\nlogsource:\n  product: windows\n  service: security\n  category: service_creation\ndetection:\n    selection:\n      EventID: 7045\n      ServiceAccount|contains: \"NON_EXISTENT\"\n    condition: selection"
+        },
+        "splunk": {
+          "spl": "index=security EventCode=7045 ServiceAccount=\"*NON_EXISTENT*\" | stats count by ServiceName, ServiceAccount, Computer | where count >= 1"
+        },
+        "findings_example": "Service 'FakeService' created by 'NON_EXISTENT_USER' on 'SERVER02' within 10 minutes.",
+        "methodologies_enriched": [
+          {
+            "name": "T1050"
+          },
+          {
+            "name": "SANS"
+          }
+        ],
+        "axoden_methodologies": [],
+        "validation_status": "passed",
+        "validation_error": null
+      },
+      {
+        "title": "Failed Privilege Escalation Attempts by Non-Existent Users",
+        "action": "Monitor for failed attempts to escalate privileges by non-existent users within a 5m window.",
+        "confidence": 9,
+        "methodologies": [
+          "T1068",
+          "MITRE ATT&CK"
+        ],
+        "sigma": {
+          "yaml": "title: Failed Privilege Escalation Attempts by Non-Existent Users\nlogsource:\n  product: windows\n  service: security\n  category: privilege_escalation\ndetection:\n    selection:\n      EventID: 4673\n      SubjectUserName|contains: \"NON_EXISTENT\"\n    condition: selection"
+        },
+        "splunk": {
+          "spl": "index=security EventCode=4673 SubjectUserName=\"*NON_EXISTENT*\" | stats count by Privilege, SubjectUserName, Computer | where count >= 1"
+        },
+        "findings_example": "Non-existent user 'phantom_user' attempted to use 'SeDebugPrivilege' on 'LAPTOP-5678' within 5 minutes.",
+        "methodologies_enriched": [
+          {
+            "name": "T1068"
+          },
+          {
+            "name": "MITRE ATT&CK"
+          }
+        ],
+        "axoden_methodologies": [],
+        "validation_status": "passed",
+        "validation_error": null
+      }
+    ],
+    "confidence_summary": {
+      "avg_confidence": 8.0,
+      "max_confidence": 9,
+      "min_confidence": 7,
+      "high_confidence_count": 3
+    },
+    "metadata": {
+      "model": "gpt-4-turbo",
+      "validation_passed": 5,
+      "validation_failed": 0,
+      "tokens_used": null,
+      "estimated_cost_usd": null,
+      "coverage_target": 0.0,
+      "coverage_achieved": 1.0,
+      "techniques_remaining": [],
+      "runs_executed": 1
+    }
+  }
+}

@@ -1,171 +1,36 @@
 {
   "ebdp_metrics": {
-    "total_stages": 4,
-    "stages_compliant": 2,
-    "total_violations": 46,
-    "avg_budget_utilization": 1.4522876500953976,
-    "alert_status": "critical",
-    "global_bound_violated": false,
-    "total_entropy": 3.4894818422824025,
-    "total_budget": 4.8,
-    "stage_metrics": {
-      "parse_events": {
-        "stage_name": "parse_events",
-        "h_max": 1.5,
-        "current_entropy": -1.4426951601859516e-10,
-        "budget_utilization": -9.617967734573011e-11,
-        "samples_collected": 32,
-        "violations": 0,
-        "warnings": 0,
-        "last_violation": null,
-        "avg_entropy": -1.4426951601859514e-10
-      },
-      "extract_indicators": {
-        "stage_name": "extract_indicators",
-        "h_max": 0.8,
-        "current_entropy": 1.5597507794559708,
-        "budget_utilization": 1.9496884743199634,
-        "samples_collected": 32,
-        "violations": 23,
-        "warnings": 0,
-        "last_violation": 1765283635.5870023,
-        "avg_entropy": 1.5798075770064286
-      },
-      "detect_findings": {
-        "stage_name": "detect_findings",
-        "h_max": 2.0,
-        "current_entropy": -1.4426951601859516e-10,
-        "budget_utilization": -7.213475800929758e-11,
-        "samples_collected": 30,
-        "violations": 0,
-        "warnings": 0,
-        "last_violation": null,
-        "avg_entropy": -1.4426951601859516e-10
-      },
-      "build_assessment": {
-        "stage_name": "build_assessment",
-        "h_max": 0.5,
-        "current_entropy": 1.929731063114971,
-        "budget_utilization": 3.859462126229942,
-        "samples_collected": 32,
-        "violations": 23,
-        "warnings": 0,
-        "last_violation": 1765283635.5882146,
-        "avg_entropy": 1.978574943222017
-      }
-    },
-    "independence_score": 0.0,
-    "cmri_score": 1.0
+    "total_violations": 0,
+    "total_entropy": 0.0,
+    "alert_status": "healthy"
   },
-  "c4_state": null,
+  "c4_state": {
+    "squad": {
+      "members": [
+        {
+          "role": "DetectionTriage",
+          "agent_id": 7,
+          "agent_name": "Detection Agent"
+        },
+        {
+          "role": "ThreatHunting",
+          "agent_id": 11,
+          "agent_name": "Hunting Agent"
+        }
+      ]
+    }
+  },
   "confidence_ledger": null,
   "agent_selection_pool": [
     {
-      "agent_id": "detection_triage",
-      "agent_name": "Detection & Triage Agent",
-      "confidence": 0.84518,
-      "reasoning": "matches 1 capability keywords",
-      "task_type": "threat_assessment",
-      "performance_score": 0.7130645161290325,
-      "historical_success_rate": 1.0,
-      "domain_expertise": [
-        "cybersecurity"
-      ],
-      "capabilities": [
-        "threat_assessment",
-        "alert_triage"
-      ],
-      "scores": {
-        "capability_overlap": 1,
-        "token_overlap": 0,
-        "domain_boost": 0.0,
-        "raw_score": 0.6,
-        "c4_alignment": 0.9506,
-        "c4_cosine": 0.98332765921634,
-        "c4_euclid": 0.22309863289585613,
-        "c4_Cadapt": [
-          -0.6,
-          0.35800000000000004,
-          0.165,
-          -0.17200000000000001
-        ],
-        "c4_beta": 0.35,
-        "c4_domain": "cybersecurity",
-        "final_score": 2.5725956685536824
-      },
-      "architectural_id": 7
+      "role": "DetectionTriage",
+      "agent_id": 7,
+      "agent_name": "Detection Agent"
     },
     {
-      "agent_id": "incident_commander",
-      "agent_name": "Incident Commander",
-      "confidence": 0.77471,
-      "reasoning": "matches 0 capability keywords",
-      "task_type": "incident_command",
-      "performance_score": null,
-      "historical_success_rate": null,
-      "domain_expertise": [
-        "incident_response"
-      ],
-      "capabilities": [
-        "incident_command",
-        "evidence_management",
-        "playbook_execution"
-      ],
-      "scores": {
-        "capability_overlap": 0,
-        "token_overlap": 0,
-        "domain_boost": 0.0,
-        "raw_score": 0.0,
-        "c4_alignment": 0.9157,
-        "c4_cosine": 0.643251780432596,
-        "c4_euclid": 0.42082448835589403,
-        "c4_Cadapt": [
-          0.0,
-          0.17900000000000002,
-          0.24749999999999997,
-          -0.08600000000000001
-        ],
-        "c4_beta": 0.35,
-        "c4_domain": "cybersecurity",
-        "final_score": 0.45284790725092977
-      },
-      "architectural_id": 7
-    },
-    {
-      "agent_id": "grc",
-      "agent_name": "Risk & Compliance Agent",
-      "confidence": 0.7595000000000001,
-      "reasoning": "matches 0 capability keywords",
-      "task_type": "compliance_mapping",
-      "performance_score": null,
-      "historical_success_rate": null,
-      "domain_expertise": [
-        "governance"
-      ],
-      "capabilities": [
-        "compliance_mapping",
-        "risk_modeling",
-        "control_validation"
-      ],
-      "scores": {
-        "capability_overlap": 0,
-        "token_overlap": 0,
-        "domain_boost": 0.0,
-        "raw_score": 0.0,
-        "c4_alignment": 0.865,
-        "c4_cosine": 0.0,
-        "c4_euclid": 0.5477225575051662,
-        "c4_Cadapt": [
-          0.0,
-          0.0,
-          0.0,
-          0.0
-        ],
-        "c4_beta": 0.35,
-        "c4_domain": "cybersecurity",
-        "final_score": 0.2912277442494834
-      },
-      "architectural_id": 1
+      "role": "ThreatHunting",
+      "agent_id": 11,
+      "agent_name": "Hunting Agent"
     }
   ]
 }

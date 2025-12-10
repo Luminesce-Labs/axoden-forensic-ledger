@@ -1,11 +1,10 @@
 {
-  "timestamp": "2025-12-09T12:35:07.029125+00:00",
+  "timestamp": 1765366275.2958,
   "semantic_tuple": {
     "src": "chatbot_logs",
     "dst": "AxoDen_SFA",
-    "action": "ALLOW",
-    "state": "Certified",
-    "reason": "CFS Certified: Squad is Cognitively Diverse"
+    "action": "ASSESS",
+    "state": "Active"
   },
-  "integrity_hash": "3b76a1c5f6d007e6722804b5df0b4c712179a078dac97fc80dc092dd5b47e385"
+  "integrity_hash": "sim_hash_1765366275"
 }

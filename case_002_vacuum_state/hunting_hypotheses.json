@@ -1,0 +1,121 @@
+{
+  "status": "success",
+  "session_id": "hunt_auto_e3d81cb8",
+  "hypotheses": 3,
+  "discarded_low_confidence": 2,
+  "response": {
+    "session_id": "hunt_auto_e3d81cb8",
+    "hypotheses": [
+      {
+        "title": "Identify High Entropy File Creation by Unusual Processes",
+        "action": "Hunt for file creations with high entropy filenames by processes not seen before in the last 1h",
+        "confidence": 7,
+        "methodologies": [
+          "T1059.001",
+          "Diamond Model"
+        ],
+        "sigma": {
+          "yaml": "title: High Entropy Filename Creation\nlogsource:\n  product: windows\n  category: file_creation\n  service: sysmon\ndetection:\n    selection:\n      EventID: 11\n      TargetFilename|base64entropy: '>=7.5'\n    condition: selection"
+        },
+        "splunk": {
+          "spl": "index=oswinlogs EventCode=11 | eval entropy=base64entropy(TargetFilename) | where entropy>=7.5 | stats count by ProcessName, TargetFilename, _time | where count>=1"
+        },
+        "findings_example": "ProcessName: unknown.exe, TargetFilename: C:\\temp\\abc123.tmp, _time: 2023-10-01T12:00:00Z",
+        "methodologies_enriched": [
+          {
+            "id": "T1059.001",
+            "name": "PowerShell",
+            "tactic": "Unknown",
+            "description": "Adversaries may abuse PowerShell commands and scripts for execution. PowerShell is a powerful interactive command-line interface and scripting environment included in the Windows operating system.(Cit",
+            "url": "https://attack.mitre.org/techniques/T1059/001/"
+          },
+          {
+            "name": "Diamond Model"
+          }
+        ],
+        "axoden_methodologies": [],
+        "validation_status": "passed",
+        "validation_error": null
+      },
+      {
+        "title": "Detect High Entropy Files Written by Network Services",
+        "action": "Search for files with high entropy written by processes running as network service accounts in the last 1h",
+        "confidence": 8,
+        "methodologies": [
+          "T1021.002",
+          "SANS"
+        ],
+        "sigma": {
+          "yaml": "title: Network Service High Entropy File Write\nlogsource:\n  product: windows\n  service: sysmon\n  category: file_creation\ndetection:\n    selection:\n      EventID: 11\n      TargetFilename|base64entropy: '>=7.5'\n      User|contains: 'NETWORK SERVICE'\n    condition: selection"
+        },
+        "splunk": {
+          "spl": "index=oswinlogs EventCode=11 User=\"*NETWORK SERVICE*\" | eval entropy=base64entropy(TargetFilename) | where entropy>=7.5 | stats count by User, TargetFilename, _time | where count>=1"
+        },
+        "findings_example": "User: NETWORK SERVICE, TargetFilename: C:\\inetpub\\wwwroot\\xyz123.asp, _time: 2023-10-01T13:00:00Z",
+        "methodologies_enriched": [
+          {
+            "id": "T1021.002",
+            "name": "SMB/Windows Admin Shares",
+            "tactic": "Unknown",
+            "description": "Adversaries may use [Valid Accounts](https://attack.mitre.org/techniques/T1078) to interact with a remote network share using Server Message Block (SMB). The adversary may then perform actions as the ",
+            "url": "https://attack.mitre.org/techniques/T1021/002/"
+          },
+          {
+            "name": "SANS"
+          }
+        ],
+        "axoden_methodologies": [],
+        "validation_status": "passed",
+        "validation_error": null
+      },
+      {
+        "title": "Identify High Entropy Files Accessed by Critical Processes",
+        "action": "Hunt for high entropy files accessed by critical processes like lsass.exe in the last 1h",
+        "confidence": 9,
+        "methodologies": [
+          "T1003.001",
+          "SANS"
+        ],
+        "sigma": {
+          "yaml": "title: Critical Process High Entropy File Access\nlogsource:\n  product: windows\n  service: sysmon\n  category: file_access\ndetection:\n    selection:\n      EventID: 10\n      TargetFilename|base64entropy: '>=7.5'\n      ProcessName|contains: 'lsass.exe'\n    condition: selection"
+        },
+        "splunk": {
+          "spl": "index=oswinlogs EventCode=10 ProcessName=\"lsass.exe\" | eval entropy=base64entropy(TargetFilename) | where entropy>=7.5 | stats count by ProcessName, TargetFilename, _time | where count>=1"
+        },
+        "findings_example": "ProcessName: lsass.exe, TargetFilename: C:\\Windows\\System32\\highentropyfile.dll, _time: 2023-10-01T16:00:00Z",
+        "methodologies_enriched": [
+          {
+            "id": "T1003.001",
+            "name": "LSASS Memory",
+            "tactic": "Unknown",
+            "description": "Adversaries may attempt to access credential material stored in the process memory of the Local Security Authority Subsystem Service (LSASS). After a user logs on, the system generates and stores a va",
+            "url": "https://attack.mitre.org/techniques/T1003/001/"
+          },
+          {
+            "name": "SANS"
+          }
+        ],
+        "axoden_methodologies": [],
+        "validation_status": "passed",
+        "validation_error": null
+      }
+    ],
+    "confidence_summary": {
+      "avg_confidence": 8.0,
+      "max_confidence": 9,
+      "min_confidence": 7,
+      "high_confidence_count": 3
+    },
+    "metadata": {
+      "model": "gpt-4-turbo",
+      "validation_passed": 5,
+      "validation_failed": 0,
+      "tokens_used": null,
+      "estimated_cost_usd": null,
+      "coverage_target": 0.0,
+      "coverage_achieved": 1.0,
+      "techniques_remaining": [],
+      "runs_executed": 1
+    }
+  }
+}

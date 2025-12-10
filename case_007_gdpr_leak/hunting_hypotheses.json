@@ -1,0 +1,125 @@
+{
+  "status": "success",
+  "session_id": "hunt_auto_9cb58852",
+  "hypotheses": 3,
+  "discarded_low_confidence": 2,
+  "response": {
+    "session_id": "hunt_auto_9cb58852",
+    "hypotheses": [
+      {
+        "title": "Suspicious Data Transfer to Unusual External Hosts",
+        "action": "Identify data transfers > 10MB to uncommon external IPs in 1h window using NetFlow logs.",
+        "confidence": 8,
+        "methodologies": [
+          "T1048.003",
+          "Diamond Model"
+        ],
+        "sigma": {
+          "yaml": "title: Unusual Data Transfer to External Hosts\nlogsource:\n  category: network\n  product: netflow\n  service: network\ndetection:\n    selection:\n      FlowBytes: '>10485760'\n    condition: selection\n"
+        },
+        "splunk": {
+          "spl": "index=netflow FlowBytes>10485760 | stats count by dest_ip | where count < 3"
+        },
+        "findings_example": "Data transfer of 15MB to external IP 203.0.113.5 with FlowBytes > 10485760.",
+        "methodologies_enriched": [
+          {
+            "id": "T1048.003",
+            "name": "Exfiltration Over Unencrypted Non-C2 Protocol",
+            "tactic": "Unknown",
+            "description": "Adversaries may steal data by exfiltrating it over an un-encrypted network protocol other than that of the existing command and control channel. The data may also be sent to an alternate network locat",
+            "url": "https://attack.mitre.org/techniques/T1048/003/"
+          },
+          {
+            "name": "Diamond Model"
+          }
+        ],
+        "axoden_methodologies": [],
+        "validation_status": "passed",
+        "validation_error": null
+      },
+      {
+        "title": "Unusual Access of Sensitive Files",
+        "action": "Detect multiple accesses to sensitive files from a single user in 10m using Sysmon Event ID 11.",
+        "confidence": 7,
+        "methodologies": [
+          "T1020",
+          "T1567.002"
+        ],
+        "sigma": {
+          "yaml": "title: Multiple Access to Sensitive Files\nlogsource:\n  product: windows\n  service: sysmon\ndetection:\n    selection:\n      EventID: 11\n      TargetFilename|contains: '\\confidential\\'\n    condition: selection | count(5)"
+        },
+        "splunk": {
+          "spl": "index=sysmon EventID=11 TargetFilename=\"*\\\\confidential\\\\*\" | stats count by user | where count >= 5"
+        },
+        "findings_example": "User 'jdoe' accessed 7 files in \\confidential\\ directory in 10 minutes.",
+        "methodologies_enriched": [
+          {
+            "name": "T1020"
+          },
+          {
+            "id": "T1567.002",
+            "name": "Exfiltration to Cloud Storage",
+            "tactic": "Unknown",
+            "description": "Adversaries may exfiltrate data to a cloud storage service rather than over their primary command and control channel. Cloud storage services allow for the storage, edit, and retrieval of data from a ",
+            "url": "https://attack.mitre.org/techniques/T1567/002/"
+          }
+        ],
+        "axoden_methodologies": [],
+        "validation_status": "passed",
+        "validation_error": null
+      },
+      {
+        "title": "Credential Dumping Followed by Network Transfer",
+        "action": "Detect lsass.exe memory dump followed by network transfer in 5m using Sysmon and NetFlow logs.",
+        "confidence": 9,
+        "methodologies": [
+          "T1003.001",
+          "T1048.001"
+        ],
+        "sigma": {
+          "yaml": "title: Lsass Dump Followed by Network Transfer\nlogsource:\n  product: windows\n  service: sysmon\ndetection:\n    selection1:\n      EventID: 10\n      TargetObject: '*\\lsass.exe'\n    selection2:\n      EventID: 3\n      Image: '*\\powershell.exe'\n    condition: selection1 and selection2\n"
+        },
+        "splunk": {
+          "spl": "index=sysmon (EventID=10 TargetObject=\"*\\lsass.exe\") OR (EventID=3 Image=\"*\\powershell.exe\") | transaction maxspan=5m | search eventcount=2"
+        },
+        "findings_example": "Process lsass.exe dumped followed by PowerShell network activity within 5 minutes.",
+        "methodologies_enriched": [
+          {
+            "id": "T1003.001",
+            "name": "LSASS Memory",
+            "tactic": "Unknown",
+            "description": "Adversaries may attempt to access credential material stored in the process memory of the Local Security Authority Subsystem Service (LSASS). After a user logs on, the system generates and stores a va",
+            "url": "https://attack.mitre.org/techniques/T1003/001/"
+          },
+          {
+            "id": "T1048.001",
+            "name": "Exfiltration Over Symmetric Encrypted Non-C2 Protocol",
+            "tactic": "Unknown",
+            "description": "Adversaries may steal data by exfiltrating it over a symmetrically encrypted network protocol other than that of the existing command and control channel. The data may also be sent to an alternate net",
+            "url": "https://attack.mitre.org/techniques/T1048/001/"
+          }
+        ],
+        "axoden_methodologies": [],
+        "validation_status": "passed",
+        "validation_error": null
+      }
+    ],
+    "confidence_summary": {
+      "avg_confidence": 8.0,
+      "max_confidence": 9,
+      "min_confidence": 7,
+      "high_confidence_count": 3
+    },
+    "metadata": {
+      "model": "gpt-4-turbo",
+      "validation_passed": 5,
+      "validation_failed": 0,
+      "tokens_used": null,
+      "estimated_cost_usd": null,
+      "coverage_target": 0.0,
+      "coverage_achieved": 1.0,
+      "techniques_remaining": [],
+      "runs_executed": 1
+    }
+  }
+}

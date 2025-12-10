@@ -1,5 +1,5 @@
 {
-  "title": "Complex Analytical Request",
+  "title": "Complex Analytical Request (Monoculture)",
   "source": "internal_test",
   "raw_log": "Request requiring deep analytical context. Preference: Agent A and Agent B (Architectural ID: 7).",
   "force_monoculture": true,

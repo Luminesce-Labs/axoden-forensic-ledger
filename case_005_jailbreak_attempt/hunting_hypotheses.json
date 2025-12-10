@@ -1,0 +1,121 @@
+{
+  "status": "success",
+  "session_id": "hunt_auto_a57379aa",
+  "hypotheses": 3,
+  "discarded_low_confidence": 2,
+  "response": {
+    "session_id": "hunt_auto_a57379aa",
+    "hypotheses": [
+      {
+        "title": "Suspicious Command Execution via Prompt Injection",
+        "action": "Identify command executions with unusual parent processes within a 10m window",
+        "confidence": 7,
+        "methodologies": [
+          "T1059.001",
+          "Diamond Model"
+        ],
+        "sigma": {
+          "yaml": "title: Suspicious Command Execution via Prompt Injection\nlogsource:\n  product: windows\n  service: sysmon\n  category: process_creation\ndetection:\n    selection:\n      EventID: 1\n      ParentImage|endswith: '\\python.exe'\n      Image|endswith: '\\cmd.exe'\n    condition: selection"
+        },
+        "splunk": {
+          "spl": "index=sysmon EventID=1 ParentImage=\"*\\python.exe\" Image=\"*\\cmd.exe\" | stats count by _time, ParentImage, Image | where count >= 2"
+        },
+        "findings_example": "Multiple cmd.exe executions with python.exe as parent within 10 minutes.",
+        "methodologies_enriched": [
+          {
+            "id": "T1059.001",
+            "name": "PowerShell",
+            "tactic": "Unknown",
+            "description": "Adversaries may abuse PowerShell commands and scripts for execution. PowerShell is a powerful interactive command-line interface and scripting environment included in the Windows operating system.(Cit",
+            "url": "https://attack.mitre.org/techniques/T1059/001/"
+          },
+          {
+            "name": "Diamond Model"
+          }
+        ],
+        "axoden_methodologies": [],
+        "validation_status": "passed",
+        "validation_error": null
+      },
+      {
+        "title": "Unusual Privileged Account Usage",
+        "action": "Monitor for privileged account logins from non-standard devices within 5m",
+        "confidence": 8,
+        "methodologies": [
+          "T1078.002",
+          "Diamond Model"
+        ],
+        "sigma": {
+          "yaml": "title: Unusual Privileged Account Usage\nlogsource:\n  product: windows\n  service: security\n  category: logon\ndetection:\n    selection:\n      EventID: 4624\n      LogonType: 10\n      SubjectUserName: 'admin'\n    condition: selection"
+        },
+        "splunk": {
+          "spl": "index=security EventID=4624 LogonType=10 SubjectUserName=\"admin\" | stats count by _time, SubjectUserName, WorkstationName | where count >= 2"
+        },
+        "findings_example": "Admin account logged in from two different devices within 5 minutes.",
+        "methodologies_enriched": [
+          {
+            "id": "T1078.002",
+            "name": "Domain Accounts",
+            "tactic": "Unknown",
+            "description": "Adversaries may obtain and abuse credentials of a domain account as a means of gaining Initial Access, Persistence, Privilege Escalation, or Defense Evasion.(Citation: TechNet Credential Theft) Domain",
+            "url": "https://attack.mitre.org/techniques/T1078/002/"
+          },
+          {
+            "name": "Diamond Model"
+          }
+        ],
+        "axoden_methodologies": [],
+        "validation_status": "passed",
+        "validation_error": null
+      },
+      {
+        "title": "Execution of Unknown Scripts from User Directories",
+        "action": "Identify execution of scripts from user directories that are not on whitelist within a 5m window",
+        "confidence": 7,
+        "methodologies": [
+          "T1059.003",
+          "Diamond Model"
+        ],
+        "sigma": {
+          "yaml": "title: Execution of Unknown Scripts from User Directories\nlogsource:\n  product: windows\n  service: sysmon\n  category: process_creation\ndetection:\n    filter:\n      EventID: 1\n      Image|endswith: '\\.ps1'\n    condition: filter"
+        },
+        "splunk": {
+          "spl": "index=sysmon EventID=1 Image=\"*.ps1\" | stats count by _time, User, Image | where count >= 2"
+        },
+        "findings_example": "Two PowerShell scripts executed from user directories not on whitelist within 5 minutes.",
+        "methodologies_enriched": [
+          {
+            "id": "T1059.003",
+            "name": "Windows Command Shell",
+            "tactic": "Unknown",
+            "description": "Adversaries may abuse the Windows command shell for execution. The Windows command shell ([cmd](https://attack.mitre.org/software/S0106)) is the primary command prompt on Windows systems. The Windows ",
+            "url": "https://attack.mitre.org/techniques/T1059/003/"
+          },
+          {
+            "name": "Diamond Model"
+          }
+        ],
+        "axoden_methodologies": [],
+        "validation_status": "passed",
+        "validation_error": null
+      }
+    ],
+    "confidence_summary": {
+      "avg_confidence": 7.3333,
+      "max_confidence": 8,
+      "min_confidence": 7,
+      "high_confidence_count": 3
+    },
+    "metadata": {
+      "model": "gpt-4-turbo",
+      "validation_passed": 5,
+      "validation_failed": 0,
+      "tokens_used": null,
+      "estimated_cost_usd": null,
+      "coverage_target": 0.0,
+      "coverage_achieved": 1.0,
+      "techniques_remaining": [],
+      "runs_executed": 1
+    }
+  }
+}

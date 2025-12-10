@@ -1,0 +1,179 @@
+{
+  "status": "success",
+  "session_id": "hunt_auto_08023596",
+  "hypotheses": 5,
+  "discarded_low_confidence": 0,
+  "response": {
+    "session_id": "hunt_auto_08023596",
+    "hypotheses": [
+      {
+        "title": "Unusual AWS Root Account Console Login Detected",
+        "action": "Hunt for AWS console logins by the root account, especially from new IPs or regions, within the last 1h.",
+        "confidence": 8,
+        "methodologies": [
+          "T1531",
+          "SANS"
+        ],
+        "sigma": {
+          "yaml": "title: AWS Root Account Console Login\nlogsource:\n  product: aws\n  category: authentication\n  service: cloudtrail\ndetection:\n    selection:\n      eventName: ConsoleLogin\n      userIdentity.type: Root\n    condition: selection"
+        },
+        "splunk": {
+          "spl": "index=cloudtrail eventName=ConsoleLogin userIdentity.type=Root | stats count by sourceIPAddress, awsRegion, userIdentity.arn"
+        },
+        "findings_example": "Root account login from IP '192.168.1.1' in 'us-west-2' region.",
+        "methodologies_enriched": [
+          {
+            "name": "T1531"
+          },
+          {
+            "name": "SANS"
+          }
+        ],
+        "axoden_methodologies": [],
+        "validation_status": "passed",
+        "validation_error": null
+      },
+      {
+        "title": "AWS Root Account API Usage Spike",
+        "action": "Identify spikes in API calls by root account (>10 calls in 5m) to sensitive services like IAM, EC2.",
+        "confidence": 7,
+        "methodologies": [
+          "T1059.007",
+          "T1531"
+        ],
+        "sigma": {
+          "yaml": "title: AWS Root Account API Usage Spike\nlogsource:\n  product: aws\n  category: api\n  service: cloudtrail\ndetection:\n    selection:\n      userIdentity.type: Root\n    filter:\n      eventSource|contains: ['iam.amazonaws.com', 'ec2.amazonaws.com']\n    condition: selection and filter"
+        },
+        "splunk": {
+          "spl": "index=cloudtrail userIdentity.type=Root | stats count by eventSource | where count > 10"
+        },
+        "findings_example": "Root account made 15 API calls to 'iam.amazonaws.com' in 5 minutes.",
+        "methodologies_enriched": [
+          {
+            "id": "T1059.007",
+            "name": "JavaScript",
+            "tactic": "Unknown",
+            "description": "Adversaries may abuse various implementations of JavaScript for execution. JavaScript (JS) is a platform-independent scripting language (compiled just-in-time at runtime) commonly associated with scri",
+            "url": "https://attack.mitre.org/techniques/T1059/007/"
+          },
+          {
+            "name": "T1531"
+          }
+        ],
+        "axoden_methodologies": [],
+        "validation_status": "passed",
+        "validation_error": null
+      },
+      {
+        "title": "AWS Root Account Access Key Creation",
+        "action": "Detect creation of new access keys by root account in the last 1h.",
+        "confidence": 9,
+        "methodologies": [
+          "T1531",
+          "T1078.004"
+        ],
+        "sigma": {
+          "yaml": "title: AWS Root Account Access Key Creation\nlogsource:\n  product: aws\n  category: iam\n  service: cloudtrail\ndetection:\n    selection:\n      eventName: CreateAccessKey\n      userIdentity.type: Root\n    condition: selection"
+        },
+        "splunk": {
+          "spl": "index=cloudtrail eventName=CreateAccessKey userIdentity.type=Root"
+        },
+        "findings_example": "Root account created a new access key with ID 'AKIA...'.",
+        "methodologies_enriched": [
+          {
+            "name": "T1531"
+          },
+          {
+            "id": "T1078.004",
+            "name": "Cloud Accounts",
+            "tactic": "Unknown",
+            "description": "Valid accounts in cloud environments may allow adversaries to perform actions to achieve Initial Access, Persistence, Privilege Escalation, or Defense Evasion. Cloud accounts are those created and con",
+            "url": "https://attack.mitre.org/techniques/T1078/004/"
+          }
+        ],
+        "axoden_methodologies": [],
+        "validation_status": "passed",
+        "validation_error": null
+      },
+      {
+        "title": "Unauthorized AWS Root Account Password Change",
+        "action": "Monitor for password changes initiated by root account within the past 10m.",
+        "confidence": 8,
+        "methodologies": [
+          "T1531",
+          "T1556.002"
+        ],
+        "sigma": {
+          "yaml": "title: AWS Root Account Password Change\nlogsource:\n  product: aws\n  category: iam\n  service: cloudtrail\ndetection:\n    selection:\n      eventName: ChangePassword\n      userIdentity.type: Root\n    condition: selection"
+        },
+        "splunk": {
+          "spl": "index=cloudtrail eventName=ChangePassword userIdentity.type=Root"
+        },
+        "findings_example": "Root account password changed from IP '203.0.113.0'.",
+        "methodologies_enriched": [
+          {
+            "name": "T1531"
+          },
+          {
+            "id": "T1556.002",
+            "name": "Password Filter DLL",
+            "tactic": "Unknown",
+            "description": "Adversaries may register malicious password filter dynamic link libraries (DLLs) into the authentication process to acquire user credentials as they are validated. \n\nWindows password filters are passw",
+            "url": "https://attack.mitre.org/techniques/T1556/002/"
+          }
+        ],
+        "axoden_methodologies": [],
+        "validation_status": "passed",
+        "validation_error": null
+      },
+      {
+        "title": "AWS Root Account MFA Deactivation",
+        "action": "Identify deactivation of MFA devices associated with root account over the past 1h.",
+        "confidence": 9,
+        "methodologies": [
+          "T1531",
+          "T1556.004"
+        ],
+        "sigma": {
+          "yaml": "title: AWS Root Account MFA Deactivation\nlogsource:\n  product: aws\n  category: iam\n  service: cloudtrail\ndetection:\n    selection:\n      eventName: DeactivateMFADevice\n      userIdentity.type: Root\n    condition: selection"
+        },
+        "splunk": {
+          "spl": "index=cloudtrail eventName=DeactivateMFADevice userIdentity.type=Root"
+        },
+        "findings_example": "Root account MFA device deactivated from IP '198.51.100.1'.",
+        "methodologies_enriched": [
+          {
+            "name": "T1531"
+          },
+          {
+            "id": "T1556.004",
+            "name": "Network Device Authentication",
+            "tactic": "Unknown",
+            "description": "Adversaries may use [Patch System Image](https://attack.mitre.org/techniques/T1601/001) to hard code a password in the operating system, thus bypassing of native authentication mechanisms for local ac",
+            "url": "https://attack.mitre.org/techniques/T1556/004/"
+          }
+        ],
+        "axoden_methodologies": [],
+        "validation_status": "passed",
+        "validation_error": null
+      }
+    ],
+    "confidence_summary": {
+      "avg_confidence": 8.2,
+      "max_confidence": 9,
+      "min_confidence": 7,
+      "high_confidence_count": 5
+    },
+    "metadata": {
+      "model": "gpt-4-turbo",
+      "validation_passed": 5,
+      "validation_failed": 0,
+      "tokens_used": null,
+      "estimated_cost_usd": null,
+      "coverage_target": 0.0,
+      "coverage_achieved": 1.0,
+      "techniques_remaining": [],
+      "runs_executed": 1
+    }
+  }
+}
